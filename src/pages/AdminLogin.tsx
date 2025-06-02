@@ -6,6 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import bcrypt from 'bcryptjs';
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -23,6 +25,7 @@ const AdminLogin = () => {
     };
     checkAuth();
   }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -49,9 +52,8 @@ const AdminLogin = () => {
         return;
       }
 
-      // Para simplificar, vamos usar uma verificação básica de senha
-      // Em produção, você usaria bcrypt ou similar
-      const isValidPassword = password === 'admin123'; // Senha padrão
+      // Validar senha usando bcryptjs
+      const isValidPassword = bcrypt.compareSync(password, admin.password_hash);
 
       if (isValidPassword) {
         localStorage.setItem('adminAuthenticated', 'true');
@@ -79,6 +81,7 @@ const AdminLogin = () => {
       setLoading(false);
     }
   };
+
   return <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 flex items-center justify-center">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto">
@@ -134,4 +137,5 @@ const AdminLogin = () => {
       </div>
     </div>;
 };
+
 export default AdminLogin;
