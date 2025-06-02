@@ -104,7 +104,7 @@ const AdminLogin = () => {
                   <label className="text-sm font-medium text-gray-700">Email</label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                    <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@exemplo.com" className="pl-10 border-gray-200 focus:border-amber-400" required />
+                    <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@exemplo.com" className="pl-10 border-gray-200 focus:border-amber-400" required variant="default" />
                   </div>
                 </div>
 
@@ -112,7 +112,7 @@ const AdminLogin = () => {
                   <label className="text-sm font-medium text-gray-700">Senha</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                    <Input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Sua senha" className="pl-10 pr-10 border-gray-200 focus:border-amber-400" required />
+                    <Input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Sua senha" className="pl-10 pr-10 border-gray-200 focus:border-amber-400" required variant="default" />
                     <Button type="button" variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} className="absolute right-1 top-1 h-8 w-8 p-0">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </Button>

@@ -319,25 +319,13 @@ const Formulario = () => {
           </div>
           
           <div className="max-w-2xl mx-auto">
-            {question.type === 'textarea' ? (
-              <Textarea
-                value={formData[question.field as keyof FormData]}
-                onChange={(e) => handleInputChange(question.field as keyof FormData, e.target.value)}
-                placeholder="Conte-nos sobre este momento especial..."
-                rows={6}
-                className="text-lg border-amber-200 focus:border-amber-400 rounded-xl"
-                required={question.required}
-              />
-            ) : (
-              <Input
-                type={question.field === 'telefone' ? 'tel' : 'text'}
-                value={formData[question.field as keyof FormData]}
-                onChange={(e) => handleInputChange(question.field as keyof FormData, e.target.value)}
-                placeholder="Sua resposta..."
-                className="text-lg border-amber-200 focus:border-amber-400 rounded-xl p-4"
-                required={question.required}
-              />
-            )}
+            <Textarea
+              value={formData[question.field as keyof FormData]}
+              onChange={(e) => handleInputChange(question.field as keyof FormData, e.target.value)}
+              placeholder={question.type === 'textarea' ? "Conte-nos sobre este momento especial..." : "Sua resposta..."}
+              rows={6}
+              required={question.required}
+            />
           </div>
         </div>
       );
@@ -397,14 +385,14 @@ const Formulario = () => {
                       placeholder="Escreva uma breve descrição da foto e de qual momento ela representa, para que fique fácil a Cris entender e ilustrar"
                       value={photo.legenda}
                       onChange={(e) => updatePhotoData(index, 'legenda', e.target.value)}
-                      className={`border-amber-200 ${!photo.legenda.trim() ? 'border-red-300 focus:border-red-400' : ''}`}
+                      className={ !photo.legenda.trim() ? 'border-red-300 focus:border-red-400' : '' }
                       required
                     />
                     <Input
                       placeholder="Ano da foto *"
                       value={photo.ano}
                       onChange={(e) => updatePhotoData(index, 'ano', e.target.value)}
-                      className={`border-amber-200 ${!photo.ano.trim() ? 'border-red-300 focus:border-red-400' : ''}`}
+                      className={ !photo.ano.trim() ? 'border-red-300 focus:border-red-400' : '' }
                       required
                     />
                   </div>

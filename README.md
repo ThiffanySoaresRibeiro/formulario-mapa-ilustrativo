@@ -83,5 +83,16 @@ src/
 - Integração com IA para organização das respostas
 - UI responsiva, com feedback visual (toasts, loaders, etc)
 
----
+## 🖊️ Padrão de Inputs/Textareas
 
+- Todos os campos do formulário principal agora usam **apenas o componente `<Textarea />`** para garantir:
+    - Alinhamento superior do texto e placeholder
+    - Altura e padding iguais em todas as perguntas
+    - Visual consistente e confortável, conforme UX desejada
+- O componente `<Input />` foi ajustado para aceitar a prop `variant` (`"form"` ou `"default"`):
+    - **`variant="form"`**: visual alto, igual ao `<Textarea />` (usado apenas se necessário em outros contextos)
+    - **`variant="default"`**: visual tradicional de input single-line (baixo, centralizado)
+- **Apenas telas administrativas (login)** usam `<Input variant="default" />`, mantendo o visual clássico de campos de email e senha.
+- Nos demais casos, `<Textarea />` é utilizado para garantir padrão visual em todas as perguntas do formulário multi-etapas.
+
+---
