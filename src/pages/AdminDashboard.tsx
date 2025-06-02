@@ -760,12 +760,14 @@ const AdminDashboard = () => {
         <div className="mb-6 space-y-4">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
+                type="text"
                 placeholder="Buscar por nome ou telefone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="w-full rounded-lg border border-gray-200 bg-white pl-10 py-3 text-gray-700 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2"
+                variant="default"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -793,7 +795,8 @@ const AdminDashboard = () => {
                   type="date"
                   value={dateFrom}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-auto"
+                  className="w-full rounded-lg border border-gray-200 bg-white py-3 text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2"
+                  variant="default"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -802,7 +805,8 @@ const AdminDashboard = () => {
                   type="date"
                   value={dateTo}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="w-auto"
+                  className="w-full rounded-lg border border-gray-200 bg-white py-3 text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2"
+                  variant="default"
                 />
               </div>
               {(dateFrom || dateTo) && (

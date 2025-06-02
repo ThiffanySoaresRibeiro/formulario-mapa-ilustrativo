@@ -35,41 +35,44 @@ const ImageViewer = ({ isOpen, onClose, image }: ImageViewerProps) => {
 
   const handleDownload = async () => {
     try {
-      const { data, error } = await supabase.storage
-        .from('submission-photos')
-        .download(image.file_path);
-
-      if (error) {
-        console.error('Error downloading image:', error);
-        toast({
-          title: "Erro no download",
-          description: "Não foi possível baixar a imagem.",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // Criar URL para download
-      const url = URL.createObjectURL(data);
       if (isMobile()) {
-        window.open(url, '_blank');
+        // Usa o link público para mobile
+        const publicUrl = getPhotoUrl(image.file_path);
+        window.open(publicUrl, '_blank');
         toast({
           title: "Atenção",
-          description: "A imagem foi aberta em nova aba. Toque e segure para salvar.",
+          description: "A imagem foi aberta em nova aba. Toque e segure para salvar no seu dispositivo.",
         });
       } else {
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = image.file_name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      toast({
-        title: "Download concluído",
-        description: "A imagem foi baixada com sucesso."
-      });
+        // Download tradicional para desktop
+        const { data, error } = await supabase.storage
+          .from('submission-photos')
+          .download(image.file_path);
+
+        if (error) {
+          console.error('Error downloading image:', error);
+          toast({
+            title: "Erro no download",
+            description: "Não foi possível baixar a imagem.",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        const url = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = image.file_name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        toast({
+          title: "Download concluído",
+          description: "A imagem foi baixada com sucesso."
+        });
       }
-      URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download error:', error);
       toast({
