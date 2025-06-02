@@ -382,18 +382,20 @@ const Formulario = () => {
                   </div>
                   <div className="p-4 space-y-3">
                     <Input
-                      placeholder="Escreva uma breve descrição da foto e de qual momento ela representa, para que fique fácil a Cris entender e ilustrar"
+                      variant="default"
+                      placeholder="Escreva uma breve descrição da foto"
                       value={photo.legenda}
                       onChange={(e) => updatePhotoData(index, 'legenda', e.target.value)}
-                      className={ !photo.legenda.trim() ? 'border-red-300 focus:border-red-400' : '' }
                       required
+                      className={ !photo.legenda.trim() ? 'border-red-300 focus:border-red-400' : '' }
                     />
                     <Input
+                      variant="default"
                       placeholder="Ano da foto *"
                       value={photo.ano}
                       onChange={(e) => updatePhotoData(index, 'ano', e.target.value)}
-                      className={ !photo.ano.trim() ? 'border-red-300 focus:border-red-400' : '' }
                       required
+                      className={ !photo.ano.trim() ? 'border-red-300 focus:border-red-400' : '' }
                     />
                   </div>
                 </div>
