@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { Download, ZoomIn, ZoomOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -16,6 +15,11 @@ interface ImageViewerProps {
     ano: string;
   } | null;
 }
+
+const isMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+};
 
 const ImageViewer = ({ isOpen, onClose, image }: ImageViewerProps) => {
   const [zoom, setZoom] = useState(1);
@@ -47,18 +51,25 @@ const ImageViewer = ({ isOpen, onClose, image }: ImageViewerProps) => {
 
       // Criar URL para download
       const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = image.file_name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      if (isMobile()) {
+        window.open(url, '_blank');
+        toast({
+          title: "Atenção",
+          description: "A imagem foi aberta em nova aba. Toque e segure para salvar.",
+        });
+      } else {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = image.file_name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast({
+          title: "Download concluído",
+          description: "A imagem foi baixada com sucesso."
+        });
+      }
       URL.revokeObjectURL(url);
-
-      toast({
-        title: "Download concluído",
-        description: "A imagem foi baixada com sucesso."
-      });
     } catch (error) {
       console.error('Download error:', error);
       toast({
@@ -71,63 +82,51 @@ const ImageViewer = ({ isOpen, onClose, image }: ImageViewerProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+      <DialogContent className="max-w-2xl w-full max-h-[90vh] p-0">
         <DialogHeader className="p-4 border-b">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">
-              {image.legenda}
-            </DialogTitle>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setZoom(Math.max(0.5, zoom - 0.25))}
-                disabled={zoom <= 0.5}
-              >
-                <ZoomOut className="w-4 h-4" />
-              </Button>
-              <span className="text-sm font-mono">{Math.round(zoom * 100)}%</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setZoom(Math.min(3, zoom + 0.25))}
-                disabled={zoom >= 3}
-              >
-                <ZoomIn className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownload}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Baixar
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onClose}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+          <DialogTitle className="text-lg font-semibold text-center md:text-left">
+            {image.legenda}
+          </DialogTitle>
+          <p className="text-sm text-gray-600 text-center md:text-left mb-2">Ano: {image.ano}</p>
+          <div className="flex items-center justify-center gap-3 py-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setZoom(Math.max(0.5, zoom - 0.25))}
+              disabled={zoom <= 0.5}
+            >
+              <ZoomOut className="w-4 h-4" />
+            </Button>
+            <span className="text-sm font-mono min-w-[48px] text-center">{Math.round(zoom * 100)}%</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setZoom(Math.min(3, zoom + 0.25))}
+              disabled={zoom >= 3}
+            >
+              <ZoomIn className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDownload}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Baixar
+            </Button>
           </div>
-          <p className="text-sm text-gray-600">Ano: {image.ano}</p>
         </DialogHeader>
-        
-        <div className="flex-1 overflow-auto p-4">
-          <div className="flex justify-center items-center min-h-[400px]">
-            <img
-              src={getPhotoUrl(image.file_path)}
-              alt={image.legenda}
-              className="max-w-full h-auto rounded-lg shadow-lg transition-transform duration-200"
-              style={{ transform: `scale(${zoom})` }}
-              onError={(e) => {
-                e.currentTarget.src = '';
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
+        <div className="flex-1 flex justify-center items-center p-6 md:p-8">
+          <img
+            src={getPhotoUrl(image.file_path)}
+            alt={image.legenda}
+            className="max-w-[350px] md:max-w-[400px] max-h-[50vh] object-contain rounded-lg shadow-lg bg-white mx-auto my-auto"
+            style={{ transform: `scale(${zoom})` }}
+            onError={(e) => {
+              e.currentTarget.src = '';
+              e.currentTarget.style.display = 'none';
+            }}
+          />
         </div>
       </DialogContent>
     </Dialog>

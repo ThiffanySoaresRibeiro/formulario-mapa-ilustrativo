@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ClipboardCopy, ArrowLeft } from 'lucide-react';
+import { ClipboardCopy, ArrowLeft, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 const OrganizacaoIA = () => {
@@ -11,6 +11,7 @@ const OrganizacaoIA = () => {
   const [organizacao, setOrganizacao] = useState('');
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState('');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchOrganizacao = async () => {
@@ -40,6 +41,12 @@ const OrganizacaoIA = () => {
     // eslint-disable-next-line
   }, [id, respostas]);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(organizacao);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-10 px-2">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 border border-amber-100">
@@ -50,16 +57,17 @@ const OrganizacaoIA = () => {
           </Button>
           <Button
             variant="outline"
-            className="flex items-center gap-2"
-            onClick={() => {
-              navigator.clipboard.writeText(organizacao);
-            }}
+            className={`flex items-center gap-2 ${copied ? 'bg-green-100 text-green-700 border-green-300' : ''}`}
+            onClick={handleCopy}
             disabled={!organizacao}
           >
-            <ClipboardCopy className="w-4 h-4" />
-            Copiar resposta
+            {copied ? <Check className="w-4 h-4" /> : <ClipboardCopy className="w-4 h-4" />}
+            {copied ? 'Copiado!' : 'Copiar resposta'}
           </Button>
         </div>
+        {copied && (
+          <div className="mb-4 text-green-700 text-center text-sm font-medium animate-fade-in">Resposta copiada para a área de transferência!</div>
+        )}
         <h1 className="text-3xl font-extrabold mb-6 text-amber-700 tracking-tight">Organizando os principais detalhes</h1>
         {loading ? (
           <div className="flex flex-col items-center py-12">
